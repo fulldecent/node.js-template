@@ -14,11 +14,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
-      # Update this after Yarm recommends cutting over from Corepack
-      # TODO: add GitHub issue link here
+      # Update this when Yarn no longer recommends Corepack
+      # See: https://yarnpkg.com/getting-started/install
       - name: Enable Corepack
         run: corepack enable
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v7
         with:

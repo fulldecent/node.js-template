@@ -1,0 +1,10 @@
+{
+  "name": "yarn-template",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "packageManager": "yarn@4.10.3",
+  "scripts": {
+    "test": "true"
+  }
+}

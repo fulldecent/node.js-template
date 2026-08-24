@@ -1,10 +1,21 @@
-# yarn-template
+# Node.js template
 
-An opinionated starting point for every project built with Yarn.
+[![test](https://github.com/fulldecent/node.js-template/actions/workflows/test.yml/badge.svg)](https://github.com/fulldecent/node.js-template/actions/workflows/test.yml)
+
+Use this template as a starting point for any Node.js project to follow best practices.
+
+## Features
+
+Your new Node.js project will immediately implement these best practices:
+
+1. Testing as a standard
+2. Turnkey access to GitHub Actions
+3. Node version pinned with [`.node-version`](.node-version)
+4. Installation instructions for all build tools
 
 ## How to use this
 
-1. Install Node.js 24 with [fnm](https://github.com/Schniz/fnm):
+1. Install the latest Node.js LTS with [fnm](https://github.com/Schniz/fnm):
 
    ```sh
    fnm install
@@ -23,15 +34,18 @@ An opinionated starting point for every project built with Yarn.
    yarn test
    ```
 
-## What this template includes
+## Maintenance: updating dependencies
 
-- `package.json` with a minimal `test` script (`true`)
-- No dependencies and no application code
-- GitHub Actions workflow that runs tests and verifies Yarn v4 in CI
-- Node version pinned with [`.node-version`](.node-version)
+Do this every month or so and please send a PR here if you see updates available:
+
+```sh
+yarn set version latest && yarn # Send PR
+yarn upgrade-interactive # Send PR
+```
+
+Review [GitHub Action workflows](./.github/workflows) and upgrade any actions if appropriate.
 
 ## References
 
-- Yarn docs: <https://yarnpkg.com/>
-- Corepack docs: <https://nodejs.org/api/corepack.html>
-- setup-node action: <https://github.com/actions/setup-node>
+1. This website is built based on [best practices documented for Node.js projects](https://github.com/fulldecent/node.js-template).
+2. We would prefer if fnm supported build attestations since it is installed as a binary ([issue #1588](https://github.com/Schniz/fnm/issues/1588)).

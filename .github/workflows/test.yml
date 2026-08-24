@@ -1,0 +1,38 @@
+name: test
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      # Update this after Yarm recommends cutting over from Corepack
+      # TODO: add GitHub issue link here
+      - name: Enable Corepack
+        run: corepack enable
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+          cache: yarn
+          cache-dependency-path: yarn.lock
+
+      - name: Verify Yarn v4
+        run: |
+          yarn --version
+          test "$(yarn --version | cut -d. -f1)" = "4"
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Run tests
+        run: yarn test

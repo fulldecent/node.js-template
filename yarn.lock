@@ -5,8 +5,8 @@ __metadata:
   version: 10
   cacheKey: 10c0
 
-"yarn-template@workspace:.":
+"node.js-template@workspace:.":
   version: 0.0.0-use.local
-  resolution: "yarn-template@workspace:."
+  resolution: "node.js-template@workspace:."
   languageName: unknown
   linkType: soft

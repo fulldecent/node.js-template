@@ -1,14 +1,25 @@
 {
-  "name": "node.js-template",
-  "version": "0.0.0",
+  "name": "simple-rpn-calculator",
+  "version": "0.1.0",
   "private": true,
-  "description": "A Node.js package with no dependencies and a test that succeeds.",
+  "description": "Evaluate reverse Polish notation with add and subtract.",
   "license": "MIT",
+  "type": "module",
   "repository": "https://github.com/fulldecent/node.js-template",
   "packageManager": "yarn@4.18.0",
+  "engines": {
+    "node": ">=24"
+  },
+  "exports": "./src/index.js",
+  "bin": {
+    "rpn": "./src/cli.js"
+  },
+  "files": [
+    "src"
+  ],
   "--": "format uses npx @latest so it matches .github/workflows/lint.yml. A pinned devDependency would let the local write and the CI check disagree.",
   "scripts": {
-    "format": "npx prettier@latest --write . && npx markdownlint-cli@latest --fix '**/*.md' --ignore node_modules",
-    "test": "true"
+    "format": "npx prettier@latest --write . && npx markdownlint-cli@latest --fix '**/*.md'",
+    "test": "node --test"
   }
 }

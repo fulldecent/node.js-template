@@ -7,6 +7,9 @@ on:
     # Runs on all pull requests targeting any branch
     branches: ["**"]
 
+permissions:
+  contents: read
+
 jobs:
   lint:
     name: Prettier & Markdownlint
@@ -27,4 +30,4 @@ jobs:
 
       - name: Check Markdown (markdownlint)
         # Command fails if any markdown files do not meet the linting rules.
-        run: npx markdownlint-cli@latest "**/*.md" --ignore "node_modules"
+        run: npx markdownlint-cli@latest "**/*.md"

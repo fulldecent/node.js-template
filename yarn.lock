@@ -5,8 +5,10 @@ __metadata:
   version: 10
   cacheKey: 10c0
 
-"node.js-template@workspace:.":
+"simple-rpn-calculator@workspace:.":
   version: 0.0.0-use.local
-  resolution: "node.js-template@workspace:."
+  resolution: "simple-rpn-calculator@workspace:."
+  bin:
+    rpn: ./src/cli.js
   languageName: unknown
   linkType: soft

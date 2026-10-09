@@ -242,6 +242,7 @@ We specifically will not add multiply, divide, parentheses, decimal numbers or a
 1. We use title case only for proper nouns, including the name of our project.
 1. We recommend to use your package manager to install fnm because the fnm and nvm websites prefer the unsafe `curl|sh` method ([fnm issue](https://github.com/Schniz/fnm/issues/1588)).
 1. This project is built based on [best practices documented in node.js-template](https://github.com/fulldecent/node.js-template/), version 1.0.0.
+1. This project is built based on [best practices documented in project-template](https://github.com/fulldecent/project-template), release v1.3.0.
 1. The Node.js ignore rules in [.gitignore](.gitignore) come from [GitHub's Node gitignore](https://github.com/github/gitignore/blob/main/Node.gitignore).
 1. `.yarnrc.yml` sets `enableScripts` to true (Yarn 4.14 defaults to false) and `npmMinimalAgeGate` to 0 (Yarn 4.12 defaults to one day). `approvedGitRepositories` is `"**"`, which approves every git dependency. [Yarn: Security](https://yarnpkg.com/features/security)
 1. This project is released under the [MIT license](LICENSE.md).

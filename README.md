@@ -18,7 +18,7 @@
 >
 > And now below is the template, shown for a specific hypothetical project, enjoy!
 
-[![Build and test](https://github.com/fulldecent/node.js-template/actions/workflows/build-test.yml/badge.svg?branch=main)](https://github.com/fulldecent/node.js-template/actions/workflows/build-test.yml) [![Lint](https://github.com/fulldecent/node.js-template/actions/workflows/lint.yml/badge.svg?branch=main)](https://github.com/fulldecent/node.js-template/actions/workflows/lint.yml)
+[![Build and test](https://github.com/fulldecent/node.js-template/actions/workflows/build-test.yml/badge.svg)](https://github.com/fulldecent/node.js-template/actions/workflows/build-test.yml) [![Lint](https://github.com/fulldecent/node.js-template/actions/workflows/lint.yml/badge.svg)](https://github.com/fulldecent/node.js-template/actions/workflows/lint.yml)
 
 Add and subtract, in reverse Polish notation.
 

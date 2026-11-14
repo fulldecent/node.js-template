@@ -22,6 +22,12 @@ function run(script, args) {
   return result.status ?? 1;
 }
 
+// tinyglobby treats these as syntax. A directory named docs/[draft] must not
+// become a character class.
+function escapeGlob(segment) {
+  return segment.replace(/[\\?*+[\]{}()!@]/g, "\\$&");
+}
+
 function markdownPaths(input) {
   if (input.length === 0) {
     return ["**/*.md"];
@@ -37,7 +43,8 @@ function markdownPaths(input) {
     }
     if (stat?.isDirectory()) {
       const normalized = item.split(path.sep).join("/").replace(/\/$/, "");
-      targets.push(`${normalized}/**/*.md`);
+      const escaped = normalized.split("/").map(escapeGlob).join("/");
+      targets.push(`${escaped}/**/*.md`);
       continue;
     }
     if (item.endsWith(".md")) {

@@ -48,6 +48,39 @@ describe("lint-format", () => {
     }
   });
 
+  it("lints a directory whose name contains glob characters", () => {
+    const bracket = join(dir, "[draft]");
+    const sibling = join(dir, "d");
+    mkdirSync(bracket, { recursive: true });
+    mkdirSync(sibling, { recursive: true });
+    writeFileSync(join(bracket, "bad.md"), "# Same\n\n# Same\n");
+    writeFileSync(join(sibling, "good.md"), "# Title\n");
+    try {
+      const result = run(["lint:markdown", `${relativeDir}/[draft]`]);
+      assert.notEqual(result.status, 0);
+      assert.match(output(result), /\[draft\]/);
+      assert.match(output(result), /MD024/);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("does not lint a sibling that a character class would match", () => {
+    const bracket = join(dir, "[draft]");
+    const sibling = join(dir, "d");
+    mkdirSync(bracket, { recursive: true });
+    mkdirSync(sibling, { recursive: true });
+    writeFileSync(join(bracket, "good.md"), "# Title\n");
+    writeFileSync(join(sibling, "bad.md"), "# Same\n\n# Same\n");
+    try {
+      const result = run(["lint:markdown", `${relativeDir}/[draft]`]);
+      assert.equal(result.status, 0);
+      assert.equal(output(result), "");
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
   it("lints Markdown files inside a directory", () => {
     mkdirSync(dir, { recursive: true });
     writeFileSync(join(dir, "bad.md"), "# Same\n\n# Same\n");

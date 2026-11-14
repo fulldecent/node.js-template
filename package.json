@@ -17,9 +17,30 @@
   "files": [
     "src"
   ],
-  "--": "format uses npx @latest so it matches .github/workflows/lint.yml. A pinned devDependency would let the local write and the CI check disagree.",
+  "--": [
+    "Notes:",
+    "",
+    "Formatters:",
+    "- prettier and markdownlint-cli are devDependencies. yarn.lock is what local runs and CI share.",
+    "- .prettierignore lists *.md, so Prettier skips Markdown and markdownlint formats it.",
+    "",
+    "Script argument handling:",
+    "- scripts/lint-format.js routes arguments. The package scripts call node, which Yarn provides, so they do not need a POSIX shell.",
+    "- If no files were given, Prettier checks . and markdownlint checks **/*.md.",
+    "- A directory is expanded to **/*.md under that directory. Glob characters in the directory name are escaped, so a name like docs/[draft] stays that directory. Other paths are kept only when they end in .md. markdownlint-cli lints every path you hand it, so those paths go through in one invocation. One failure fails the run.",
+    "- The helper runs those programs with the same node Yarn started. markdownlint-cli stays inside the Yarn cache zip, and that path is not executable on its own."
+  ],
   "scripts": {
-    "format": "npx prettier@latest --write . && npx markdownlint-cli@latest --fix '**/*.md'",
+    "lint": "node scripts/lint-format.js lint",
+    "lint:prettier": "node scripts/lint-format.js lint:prettier",
+    "lint:markdown": "node scripts/lint-format.js lint:markdown",
+    "format": "node scripts/lint-format.js format",
+    "format:prettier": "node scripts/lint-format.js format:prettier",
+    "format:markdown": "node scripts/lint-format.js format:markdown",
     "test": "node --test"
+  },
+  "devDependencies": {
+    "markdownlint-cli": "^0.50.0",
+    "prettier": "^3.10.1"
   }
 }

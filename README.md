@@ -188,7 +188,7 @@ yarn format src/index.js README.md
 yarn lint src/index.js README.md
 ```
 
-`src/index.js` goes to Prettier. `README.md` goes to markdownlint, with every Markdown path in one invocation. A path that is not Markdown is ignored by that invocation, because markdownlint-cli lints every path you hand it. One violation fails the run.
+`src/index.js` goes to Prettier. `README.md` goes to markdownlint, with every Markdown path in one invocation. A directory is expanded to the Markdown files under it, so `yarn lint .` checks them. A path that is not a directory and not Markdown is ignored by that invocation, because markdownlint-cli lints every path you hand it. One violation fails the run.
 
 Yarn puts install outputs in the ignored `node_modules/` directory. Packed releases go in the ignored `dist/` directory.
 

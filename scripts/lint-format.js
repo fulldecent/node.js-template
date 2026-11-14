@@ -1,5 +1,7 @@
 import { spawnSync } from "node:child_process";
+import fs from "node:fs";
 import { createRequire } from "node:module";
+import path from "node:path";
 
 const require = createRequire(import.meta.url);
 const prettier = require.resolve("prettier/bin/prettier.cjs");
@@ -24,7 +26,25 @@ function markdownPaths(input) {
   if (input.length === 0) {
     return ["**/*.md"];
   }
-  return input.filter((item) => item.endsWith(".md"));
+
+  const targets = [];
+  for (const item of input) {
+    let stat;
+    try {
+      stat = fs.statSync(item);
+    } catch {
+      stat = undefined;
+    }
+    if (stat?.isDirectory()) {
+      const normalized = item.split(path.sep).join("/").replace(/\/$/, "");
+      targets.push(`${normalized}/**/*.md`);
+      continue;
+    }
+    if (item.endsWith(".md")) {
+      targets.push(item);
+    }
+  }
+  return targets;
 }
 
 const commands = new Set(["lint", "format", "lint:prettier", "lint:markdown", "format:prettier", "format:markdown"]);

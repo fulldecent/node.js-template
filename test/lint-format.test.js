@@ -48,6 +48,19 @@ describe("lint-format", () => {
     }
   });
 
+  it("lints Markdown files inside a directory", () => {
+    mkdirSync(dir, { recursive: true });
+    writeFileSync(join(dir, "bad.md"), "# Same\n\n# Same\n");
+    writeFileSync(join(dir, "good.md"), "# Title\n");
+    try {
+      const result = run(["lint:markdown", relativeDir]);
+      assert.notEqual(result.status, 0);
+      assert.match(output(result), /MD024/);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
   it("skips a non-Markdown path", () => {
     mkdirSync(dir, { recursive: true });
     writeFileSync(join(dir, "note.js"), "const value = 1;\n");

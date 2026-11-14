@@ -27,7 +27,7 @@
     "Script argument handling:",
     "- scripts/lint-format.js routes arguments. The package scripts call node, which Yarn provides, so they do not need a POSIX shell.",
     "- If no files were given, Prettier checks . and markdownlint checks **/*.md.",
-    "- markdownlint-cli lints every path you hand it, so the helper keeps only *.md and passes those paths in one invocation. One failure fails the run.",
+    "- A directory is expanded to **/*.md under that directory. Other paths are kept only when they end in .md. markdownlint-cli lints every path you hand it, so those paths go through in one invocation. One failure fails the run.",
     "- The helper runs those programs with the same node Yarn started. markdownlint-cli stays inside the Yarn cache zip, and that path is not executable on its own."
   ],
   "scripts": {

@@ -25,18 +25,18 @@
     "- .prettierignore lists *.md, so Prettier skips Markdown and markdownlint formats it.",
     "",
     "Script argument handling:",
-    "- yarn lint and yarn format pass extra arguments through to Prettier and markdownlint.",
-    "- If no files were given, the prettier scripts set -- . then forward \"$@\".",
-    "- markdownlint-cli lints every path you hand it, so the markdown scripts keep only *.md.",
-    "- The scripts call yarn prettier and yarn markdownlint so Yarn resolves the devDependency. markdownlint-cli stays inside the Yarn cache zip, and that path is not executable on its own."
+    "- scripts/lint-format.js routes arguments. The package scripts call node, which Yarn provides, so they do not need a POSIX shell.",
+    "- If no files were given, Prettier checks . and markdownlint checks **/*.md.",
+    "- markdownlint-cli lints every path you hand it, so the helper keeps only *.md and passes those paths in one invocation. One failure fails the run.",
+    "- The helper runs those programs with the same node Yarn started. markdownlint-cli stays inside the Yarn cache zip, and that path is not executable on its own."
   ],
   "scripts": {
-    "lint": "sh -c 'yarn lint:prettier \"$@\" && yarn lint:markdown \"$@\"' --",
-    "lint:prettier": "sh -c 'if [ $# -eq 0 ]; then set -- .; fi; yarn prettier --check \"$@\"' --",
-    "lint:markdown": "sh -c 'if [ $# -eq 0 ]; then yarn markdownlint \"**/*.md\"; else for file in \"$@\"; do case \"$file\" in *.md) yarn markdownlint \"$file\";; esac; done; fi' --",
-    "format": "sh -c 'yarn format:prettier \"$@\" && yarn format:markdown \"$@\"' --",
-    "format:prettier": "sh -c 'if [ $# -eq 0 ]; then set -- .; fi; yarn prettier --write \"$@\"' --",
-    "format:markdown": "sh -c 'if [ $# -eq 0 ]; then yarn markdownlint --fix \"**/*.md\"; else for file in \"$@\"; do case \"$file\" in *.md) yarn markdownlint --fix \"$file\";; esac; done; fi' --",
+    "lint": "node scripts/lint-format.js lint",
+    "lint:prettier": "node scripts/lint-format.js lint:prettier",
+    "lint:markdown": "node scripts/lint-format.js lint:markdown",
+    "format": "node scripts/lint-format.js format",
+    "format:prettier": "node scripts/lint-format.js format:prettier",
+    "format:markdown": "node scripts/lint-format.js format:markdown",
     "test": "node --test"
   },
   "devDependencies": {

@@ -181,14 +181,14 @@ yarn lint
 
 `yarn lint` checks formatting. `yarn format` writes the fixes. Both use the Prettier and markdownlint-cli versions in [package.json](package.json) and [yarn.lock](yarn.lock). [Lint](.github/workflows/lint.yml) installs that lockfile and runs `yarn lint:prettier` and `yarn lint:markdown`.
 
-`.prettierignore` lists `*.md`. Prettier skips Markdown. markdownlint formats it. Pass paths when you want to limit the run:
+`.prettierignore` lists `*.md`. Prettier skips Markdown. markdownlint formats it. The scripts run [scripts/lint-format.js](scripts/lint-format.js), which is Node.js, so the PowerShell setup above does not need a POSIX shell. Pass paths when you want to limit the run:
 
 ```sh
 yarn format src/index.js README.md
 yarn lint src/index.js README.md
 ```
 
-`src/index.js` goes to Prettier. `README.md` goes to markdownlint. A path that is not Markdown is ignored by the markdown script, because markdownlint-cli lints every path you hand it.
+`src/index.js` goes to Prettier. `README.md` goes to markdownlint, with every Markdown path in one invocation. A path that is not Markdown is ignored by that invocation, because markdownlint-cli lints every path you hand it. One violation fails the run.
 
 Yarn puts install outputs in the ignored `node_modules/` directory. Packed releases go in the ignored `dist/` directory.
 

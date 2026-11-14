@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, it } from "node:test";
 import { fileURLToPath } from "node:url";
@@ -101,6 +101,83 @@ describe("lint-format", () => {
       const result = run(["lint:markdown", `${relativeDir}/note.js`]);
       assert.equal(result.status, 0);
       assert.equal(output(result), "");
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("fails format:markdown when a violation cannot be fixed", () => {
+    mkdirSync(dir, { recursive: true });
+    writeFileSync(join(dir, "bad.md"), "# Same\n\n# Same\n");
+    writeFileSync(join(dir, "good.md"), "# Title\n");
+    try {
+      const result = run(["format:markdown", `${relativeDir}/bad.md`, `${relativeDir}/good.md`]);
+      assert.notEqual(result.status, 0);
+      assert.match(output(result), /MD024/);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("writes a Markdown fix", () => {
+    mkdirSync(dir, { recursive: true });
+    const file = join(dir, "heading.md");
+    writeFileSync(file, "#Heading\n");
+    try {
+      const result = run(["format:markdown", `${relativeDir}/heading.md`]);
+      assert.equal(result.status, 0);
+      assert.equal(readFileSync(file, "utf8"), "# Heading\n");
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("fails when Prettier finds an unformatted file", () => {
+    mkdirSync(dir, { recursive: true });
+    writeFileSync(join(dir, "note.js"), "const value=1\n");
+    try {
+      const result = run(["lint:prettier", `${relativeDir}/note.js`]);
+      assert.notEqual(result.status, 0);
+      assert.match(output(result), /note\.js/);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("writes a Prettier fix", () => {
+    mkdirSync(dir, { recursive: true });
+    const file = join(dir, "note.js");
+    writeFileSync(file, "const value=1\n");
+    try {
+      const result = run(["format:prettier", `${relativeDir}/note.js`]);
+      assert.equal(result.status, 0);
+      assert.equal(readFileSync(file, "utf8"), "const value = 1;\n");
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("keeps a Prettier failure when Markdown is clean", () => {
+    mkdirSync(dir, { recursive: true });
+    writeFileSync(join(dir, "note.js"), "const value=1\n");
+    writeFileSync(join(dir, "good.md"), "# Title\n");
+    try {
+      const result = run(["lint", `${relativeDir}/note.js`, `${relativeDir}/good.md`]);
+      assert.notEqual(result.status, 0);
+      assert.match(output(result), /note\.js/);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("keeps a Markdown failure when Prettier is clean", () => {
+    mkdirSync(dir, { recursive: true });
+    writeFileSync(join(dir, "note.js"), "const value = 1;\n");
+    writeFileSync(join(dir, "bad.md"), "# Same\n\n# Same\n");
+    try {
+      const result = run(["lint", `${relativeDir}/note.js`, `${relativeDir}/bad.md`]);
+      assert.notEqual(result.status, 0);
+      assert.match(output(result), /MD024/);
     } finally {
       rmSync(dir, { recursive: true, force: true });
     }

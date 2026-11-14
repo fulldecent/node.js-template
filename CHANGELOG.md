@@ -5,7 +5,6 @@
 
 ### Features
 
-* pin Prettier and markdownlint as dev dependencies ([eeff995](https://github.com/fulldecent/node.js-template/commit/eeff9953342e73dbc8579b2cb543dbff806772a0))
 * pin Prettier and markdownlint as dev dependencies ([0b09cdd](https://github.com/fulldecent/node.js-template/commit/0b09cdd8002110a08960895118483ee9a928bda5))
 
 

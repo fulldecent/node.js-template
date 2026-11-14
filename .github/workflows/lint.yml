@@ -19,15 +19,25 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v7
 
-      - name: Setup Node.js (tool runtime)
+      # Prettier and markdownlint-cli are devDependencies. Yarn PnP resolves
+      # them from yarn.lock, so this job uses the same install as local lint.
+      # Update this when Yarn no longer recommends Corepack.
+      # See: https://yarnpkg.com/getting-started/install
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Setup Node.js
         uses: actions/setup-node@v7
         with:
-          node-version: "lts/*" # Floating version is appropriate specifically for Prettier and markdownlint
+          node-version-file: .node-version
+          cache: yarn
+          cache-dependency-path: yarn.lock
+
+      - name: Install dependencies
+        run: yarn install --immutable
 
       - name: Check formatting (Prettier)
-        # Command fails if any files do not meet the formatting rules.
-        run: npx prettier@latest --check .
+        run: yarn lint:prettier
 
       - name: Check Markdown (markdownlint)
-        # Command fails if any markdown files do not meet the linting rules.
-        run: npx markdownlint-cli@latest "**/*.md"
+        run: yarn lint:markdown

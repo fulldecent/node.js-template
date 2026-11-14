@@ -17,9 +17,30 @@
   "files": [
     "src"
   ],
-  "--": "format uses npx @latest so it matches .github/workflows/lint.yml. A pinned devDependency would let the local write and the CI check disagree.",
+  "--": [
+    "Notes:",
+    "",
+    "Formatters:",
+    "- prettier and markdownlint-cli are devDependencies. yarn.lock is what local runs and CI share.",
+    "- .prettierignore lists *.md, so Prettier skips Markdown and markdownlint formats it.",
+    "",
+    "Script argument handling:",
+    "- yarn lint and yarn format pass extra arguments through to Prettier and markdownlint.",
+    "- If no files were given, the prettier scripts set -- . then forward \"$@\".",
+    "- markdownlint-cli lints every path you hand it, so the markdown scripts keep only *.md.",
+    "- The scripts call yarn prettier and yarn markdownlint so Yarn resolves the devDependency. markdownlint-cli stays inside the Yarn cache zip, and that path is not executable on its own."
+  ],
   "scripts": {
-    "format": "npx prettier@latest --write . && npx markdownlint-cli@latest --fix '**/*.md'",
+    "lint": "sh -c 'yarn lint:prettier \"$@\" && yarn lint:markdown \"$@\"' --",
+    "lint:prettier": "sh -c 'if [ $# -eq 0 ]; then set -- .; fi; yarn prettier --check \"$@\"' --",
+    "lint:markdown": "sh -c 'if [ $# -eq 0 ]; then yarn markdownlint \"**/*.md\"; else for file in \"$@\"; do case \"$file\" in *.md) yarn markdownlint \"$file\";; esac; done; fi' --",
+    "format": "sh -c 'yarn format:prettier \"$@\" && yarn format:markdown \"$@\"' --",
+    "format:prettier": "sh -c 'if [ $# -eq 0 ]; then set -- .; fi; yarn prettier --write \"$@\"' --",
+    "format:markdown": "sh -c 'if [ $# -eq 0 ]; then yarn markdownlint --fix \"**/*.md\"; else for file in \"$@\"; do case \"$file\" in *.md) yarn markdownlint --fix \"$file\";; esac; done; fi' --",
     "test": "node --test"
+  },
+  "devDependencies": {
+    "markdownlint-cli": "^0.50.0",
+    "prettier": "^3.10.1"
   }
 }

@@ -174,17 +174,21 @@ All project updates that we release must conform to our test suite. GitHub Actio
 
 ```sh
 yarn test
-yarn format
+yarn lint
 ```
 
-The tests in [test/rpn.test.js](test/rpn.test.js) check addition, subtraction, chained operators, invalid input and the command-line program. They check the exit status, standard output and standard error of the actual program.
+`yarn test` runs the tests in [test/rpn.test.js](test/rpn.test.js). They check addition, subtraction, chained operators, invalid input and the command-line program. They check the exit status, standard output and standard error of the actual program.
 
-With an actively maintained version of Node.js installed, correct other formatting issues before sending proposed changes:
+`yarn lint` checks formatting. `yarn format` writes the fixes. Both use the Prettier and markdownlint-cli versions in [package.json](package.json) and [yarn.lock](yarn.lock). [Lint](.github/workflows/lint.yml) installs that lockfile and runs `yarn lint:prettier` and `yarn lint:markdown`.
+
+`.prettierignore` lists `*.md`. Prettier skips Markdown. markdownlint formats it. Pass paths when you want to limit the run:
 
 ```sh
-npx prettier@latest --check . --write
-npx markdownlint-cli@latest "**/*.md" --fix
+yarn format src/index.js README.md
+yarn lint src/index.js README.md
 ```
+
+`src/index.js` goes to Prettier. `README.md` goes to markdownlint. A path that is not Markdown is ignored by the markdown script, because markdownlint-cli lints every path you hand it.
 
 Yarn puts install outputs in the ignored `node_modules/` directory. Packed releases go in the ignored `dist/` directory.
 
@@ -245,6 +249,7 @@ We specifically will not add multiply, divide, parentheses, decimal numbers or a
 1. This project is built based on [best practices documented in project-template](https://github.com/fulldecent/project-template), release v1.4.1.
 1. The Node.js ignore rules in [.gitignore](.gitignore) come from [GitHub's Node gitignore](https://github.com/github/gitignore/blob/main/Node.gitignore).
 1. `.yarnrc.yml` sets `enableScripts` to true (Yarn 4.14 defaults to false) and `npmMinimalAgeGate` to 0 (Yarn 4.12 defaults to one day). `approvedGitRepositories` is `"**"`, which approves every git dependency. [Yarn: Security](https://yarnpkg.com/features/security)
+1. Prettier and markdownlint are devDependencies. [Lint](.github/workflows/lint.yml) installs [yarn.lock](yarn.lock) and runs `yarn lint:prettier` and `yarn lint:markdown`. This follows [github-pages-template](https://github.com/fulldecent/github-pages-template) release [1.9.0](https://github.com/fulldecent/github-pages-template/releases/tag/1.9.0). That release uses markdownlint-cli2 and a Prettier Liquid plugin. This project uses markdownlint-cli, which reads [.markdownlint.json](.markdownlint.json), and it has no Prettier plugin.
 1. This project is released under the [MIT license](LICENSE.md).
 
 > [!NOTE]
